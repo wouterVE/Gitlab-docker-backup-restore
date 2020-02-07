@@ -14,7 +14,7 @@ Every line starting with `TODO`needs your input. Lines with `OPTION` are optiona
  
 The standard backup location is `/srv/gitlab/data/backups`. You can choose to move your backups to a remote location. If you want this, uncomment the last lines and make sure you enter a remote location (eg `/mnt/samba`) for the variable `rsync_loc`.
 After the backup has been succesfully created, `rsync` will be used to move the files to your remote location.
-<p> 
+ 
  The backup is saved in a directory with the date eg `YYYYMMDD` with the following names:
   * `YYMMDD_HH_MM_gitlab_backup.tar`: the main backup of your gitlab installation (repositories, db...)
  * `YYMMDD_HH_MM_gitlab_config.zip`: the configuration of your gitlab installation, protected with the password saved in `/home/gl`
