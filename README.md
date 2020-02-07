@@ -20,7 +20,7 @@ The configuration data contains the encryption keys to protect the following sen
 * 2FA user secrets
 * CI Secure variables
 
-As such it is advised to not store the config backup next to your data backup. I've opt to store them in the same place, but securing the config data with a strong password. This is generated upon the first backup and can be found under ´/home/gl´. Make sure you take a note of this password.
+As such it is advised to not store the config backup next to your data backup. I've opt to store them in the same place, but securing the config data with a strong password. This is generated upon the first backup and can be found under `/home/gl`. Make sure you take a note of this password.
 
 
 # Restore
