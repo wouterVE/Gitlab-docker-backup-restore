@@ -6,10 +6,22 @@ For Gitlab docker installation see  <a href="https://docs.gitlab.com/omnibus/doc
 Run `gl_backup.sh` as root in order to create a backup 
 Before you begin, make sure you check the following:
 
-1-`openssl`, `zip`, `rsync` need to be installed. If not, use the package manager of your distro to install them <br>
-2-Some variables need to be set up first. 
+1. `openssl`, `zip`, `rsync` need to be installed. If not, use the package manager of your distro to install them <br>
+2. Some variables need to be set up first. 
 Every line starting with `TODO`needs your input. Lines with `OPTION` are optionally <br>
-3-Consider reading the documentation at Gitlab first. Check <a href="https://docs.gitlab.com/ee/raketasks/backup_restore.html#restore-for-omnibus-installations"> this </a> and <a href="https://docs.gitlab.com/omnibus/settings/backups.html">this</a> as well
+3. Consider reading the documentation at Gitlab first. Check <a href="https://docs.gitlab.com/ee/raketasks/backup_restore.html#restore-for-omnibus-installations"> this </a> and <a href="https://docs.gitlab.com/omnibus/settings/backups.html">this</a> as well
 <p>
  
+The standard backup location is `/srv/gitlab/data/backups`. You can choose to move your backups to a remote location. If you want this, uncomment the last lines and make sure you enter a remote location (eg `/mnt/samba`) for the variable `rsync_loc`.
+After the backup has been succesfully created, `rsync` will be used to move the files to your remote location.
 
+## Important note
+The configuration data contains the encryption keys to protect the following sensitive data in the SQL database:
+* 2FA user secrets
+* CI Secure variables
+
+As such it is advised to not store the config backup next to your data backup. I've opt to store them in the same place, but securing the config data with a strong password. This is generated upon the first backup and can be found under ´/home/gl´. Make sure you take a note of this password.
+
+
+# Restore
+WIP
