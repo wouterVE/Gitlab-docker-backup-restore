@@ -110,10 +110,17 @@ docker exec -t $containerid gitlab-backup create BACKUP=$date"_"$timestamp GZIP_
 
 zip -r --password $glpw $gl_back_loc$cfgbackup  /srv/gitlab/config >/dev/null
 
+
 #
 # create dir for the date at remote location
+# first check if already exists
 #
-mkdir $rsync_loc$date 
+if [ -d "$rsync_loc$date" ]
+then
+echo "Directory already exists" > /dev/null
+else
+mkdir $rsync_loc$date
+fi
 
 #
 #OPTION -> if you wish to backup your webserver settings (eg reverse proxy) set up webserver path in variables
