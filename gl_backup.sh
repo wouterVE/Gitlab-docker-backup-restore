@@ -17,12 +17,12 @@
 #docker 19.03.5
 #Gitlab 12.6.4 CE
 
-#Created by Wouter VE 2020
+#Created by wouterVE 2020
 #URL: https://github.com/wouterVE/Gitlab-docker-backup-restore
 #
 #####################################################
 
-###SETTING UP THE VARIABLES###
+###VARIABLES###
 #All lines starting with TODO have to be set before this script can run!
 #Get current date
 date=$(date +"%Y%m%d")
@@ -43,6 +43,16 @@ webserver=""
 
 ############################################################
 
+
+
+#
+# Check for root permissions
+#
+if [ "$(id -u)" != "0" ]
+then
+        echo "ERROR: This script has to be run as root!"
+        exit 1
+fi
 
 
 #Creating strong password to store your config & ssh keys safely
@@ -148,9 +158,3 @@ fi
 #fi
 
 ##############################################
-#todo:
-# check for sudo & openssl installed
-#      restore script:
-## cp <backup> /srv/gitlab/data/backups/
-# docker exec -it <containerid> chown git:git -R /var/opt/gitlab/backups
-# docker exec -it <containerid> gitlab-backup restore 13-59
