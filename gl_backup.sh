@@ -31,10 +31,10 @@ backupname=$(echo "gitlab_config.zip")
 cfgbackup="$date"_"$timestamp"_"$backupname"
 #TODO If you have changed the backup path for gitlab adjust this variable accordingly(see https://docs.gitlab.com/omnibus/settings/backups.html#creating-an-application-backup)
 gl_back_loc="/srv/gitlab/data/backups/"
-#TODO  amount of DAYS to keep backup files eg 7
-maxDaysOfBackups="7"
 #TODO Gitlab config mount point (defaults to /srv/gitlab/config only change if you're using a different mount point)
 gl_config="/srv/gitlab/config"
+#TODO  amount of DAYS to keep backup files eg 7
+maxDaysOfBackups="7"
 #OPTION If you choose to rsync the backup to an external storage (samba, webdav...) set the rsync location here
 #!!IMPORTANT!!
 #this path must end with an / for rsync to work correctly (but if you forgot there's a check anyway :-)
