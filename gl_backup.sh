@@ -59,7 +59,7 @@ fi
 #location of generated key is /home/gl
 
 glpw_check=$(cat /home/gl | wc -c)
-echo $glpw_check
+#echo $glpw_check
 if [ $glpw_check -gt 44 ]
 then
 echo "password allready exists" > /dev/null
