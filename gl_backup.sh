@@ -121,7 +121,7 @@ if [ -d "$rsync_loc$date" ]
 then
 echo "Directory already exists" > /dev/null
 else
-mkdir $rsync_loc$date
+mkdir "$rsync_loc""$date"
 fi
 
 #
@@ -133,7 +133,7 @@ then
 echo "Nothing to do" > /dev/null
 else
 echo "ok"
-zip $rsync_loc$date/$date"_"$timestamp"_webserver.zip" $webserver
+zip "$rsync_loc""$date"/"$date""_""$timestamp""_webserver.zip" $webserver
 
 fi
 
