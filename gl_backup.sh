@@ -60,7 +60,7 @@ fi
 
 glpw_check=$(cat /home/gl | wc -c)
 #echo $glpw_check
-if [ $glpw_check -gt 44 ]
+if [ "$glpw_check" -gt 44 ]
 then
 echo "password allready exists" > /dev/null
 else
@@ -96,10 +96,10 @@ containerid=$(docker ps | grep gitlab | awk '{ print $1}')
 # https://docs.gitlab.com/ee/raketasks/backup_restore.html
 # https://docs.gitlab.com/omnibus/settings/backups.html
 # FYI: Default backup location = /srv/gitlab/data/backups
-docker exec -t $containerid gitlab-backup create BACKUP=$date"_"$timestamp GZIP_RSYNCABLE=yes #default backup option comment this when using other option
+docker exec -t "$containerid" gitlab-backup create BACKUP="$date""_""$timestamp" GZIP_RSYNCABLE=yes #default backup option comment this when using other option
 # If you receive error "File changed as we read it" you can add "STRATEGY=copy"
 # If so comment first line and uncomment next
-# docker exec -t $containerid gitlab-backup create STRATEGY=copy BACKUP=$timestamp  GZIP_RSYNCABLE=yes #uncomment this line when errors with default option 
+# docker exec -t "$containerid" gitlab-backup create STRATEGY=copy BACKUP="$timestamp"  GZIP_RSYNCABLE=yes #uncomment this line when errors with default option 
 # see https://docs.gitlab.com/ee/raketasks/backup_restore.html#backup-strategy-option
 
 
@@ -108,7 +108,7 @@ docker exec -t $containerid gitlab-backup create BACKUP=$date"_"$timestamp GZIP_
 # using the password generated and stored in /home/gl
 #
 
-zip -r --password $glpw $gl_back_loc$cfgbackup  /srv/gitlab/config >/dev/null
+zip -r --password "$glpw" $gl_back_loc"$cfgbackup"  /srv/gitlab/config >/dev/null
 
 
 #
