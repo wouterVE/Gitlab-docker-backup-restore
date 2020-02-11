@@ -33,6 +33,8 @@ cfgbackup="$date"_"$timestamp"_"$backupname"
 gl_back_loc="/srv/gitlab/data/backups/"
 #TODO  amount of DAYS to keep backup files eg 7
 maxDaysOfBackups="7"
+#TODO Gitlab config mount point (defaults to /srv/gitlab/config only change if you're using a different mount point)
+gl_config="/srv/gitlab/config"
 #OPTION If you choose to rsync the backup to an external storage (samba, webdav...) set the rsync location here
 #!!IMPORTANT!!
 #this path must end with an / for rsync to work correctly (but if you forgot there's a check anyway :-)
@@ -104,11 +106,11 @@ docker exec -t "$containerid" gitlab-backup create BACKUP="$date""_""$timestamp"
 
 
 #
-# backup config data (location= /srv/gitlab/config)
+# backup config data 
 # using the password generated and stored in /home/gl
 #
 
-zip -r --password "$glpw" $gl_back_loc"$cfgbackup"  /srv/gitlab/config >/dev/null
+zip -r --password "$glpw" $gl_back_loc"$cfgbackup"  $gl_config >/dev/null
 
 
 #
