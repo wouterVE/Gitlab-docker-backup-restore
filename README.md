@@ -33,3 +33,4 @@ You can schedule a backup job by setting a cronjob for the root user eg:
 
 # Restore
 Run `gl_restore.sh` as root in order to initiate restore.
+(WIP)
