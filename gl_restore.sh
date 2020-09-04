@@ -28,7 +28,7 @@
 #All lines starting with TODO have to be set before this script can run!
 
 #TODO If you have changed the backup path for gitlab adjust this variable accordingly(see https://docs.gitlab.com/omnibus/settings/backups.html#creating-an-application-backup)
-gl_back_loc="/path/to/gitlab/backup"
+gl_back_loc="/srv/gitlab/data/backups"
 #OPTION: if you have chosen to rsync your backups please provide tha same path here
 rsync_loc="/path/to/mount/point"
 ###END OF VARIABLES###
