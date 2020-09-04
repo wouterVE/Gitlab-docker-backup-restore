@@ -43,9 +43,9 @@ gl_config="/srv/gitlab/config"
 #TODO  amount of DAYS to keep backup files eg 7
 maxDaysOfBackups="7"
 #OPTION if you wish to backup your apache/nginx settings (eg reverse proxy) provide the location of the vhost
-webserver="/path/to/webserver/vhost"
+#webserver="/path/to/webserver/vhost"
 #OPTION if you wish to backup your docker-compose.yml please provide the path to the file 
-docker="/path/to/docker-compose.yml"
+#docker="/path/to/docker-compose.yml"
 ###END OF VARIABLES###
 
 ############################################################
@@ -64,44 +64,65 @@ fi
 
 #Creating strong password to store your config & ssh keys safely
 #location of generated key is /home/gl
-
 glpw_check=$(cat /home/gl | wc -c)
 #echo $glpw_check
 if [ "$glpw_check" -gt 44 ]
 then
-echo "password allready exists" > /dev/null
+echo "password already exists" 
 else
 openssl rand -base64 32  > /home/gl #> /dev/null
 #make sure only your user can access this file
 chmod 400 /home/gl
 fi
 #Store strong password
-glpw=$(cat /home/gl)
+glpw=$(cat /home/gl) > /dev/null
+
 
 #
-#If rsync_loc is entererd:
-# -> copy his path to bac_loc so all backup files are in same directory
-#Perform check that path ends with a /
+# If rsync_loc is entererd:
+# 1-Perform check that path ends with a /
+# 2- copy this path to "$bac_loc" so all backup files are in same directory
 #
 
 if [ -z "$rsync_loc" ]
 then
-#copy bac_loc to rsync_loc
-bac_loc=$rsync_loc
-#perform check
+echo "rsync does not exist" > /dev/null
+# check if $bac_loc exists
+if [  -z "$bac_loc" ]
+then
+echo "Please enter backup location (bac_loc)!"
+echo "Exiting ..."
+exit 1
+else
+echo "OK use $bac_loc" > /dev/null
+
+fi
+
+
+else
+echo "rsync does exist" > /dev/null
+
+#perform check for trailing /
 rsync_check=$(echo $rsync_loc | rev | cut -c 1)
 if [ "$rsync_check" != "/" ]
 then
 rsync_loc=$(echo $rsync_loc/)
+#copy rsync_loc to bac_loc
+bac_loc=$rsync_loc
 fi
 
 
 fi
+
+echo "bac_loc: ", $bac_loc
+echo "rsync_loc:" $rsync_loc
+exit 1
+
+
 
 
 
 ##############
-exit 1
 
 #Get docker container id 
 containerid=$(docker ps | grep gitlab | awk '{ print $1}')
