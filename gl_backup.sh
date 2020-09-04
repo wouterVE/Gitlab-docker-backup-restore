@@ -29,18 +29,23 @@ date=$(date +"%Y%m%d")
 timestamp=$(date +"%H-%M")
 backupname=$(echo "gitlab_config.zip")
 cfgbackup="$date"_"$timestamp"_"$backupname"
+#TODO backup location
+#If you wish to rsync your backup files to external location => uncomment rsync_loc & enter path
+#If you don't wish to rsync you backup files => uncomment bac_loc & enter path
+#bac_loc="/path/to/backup/"
+#rsync_loc="/path/to/mount/point/"
+#!!IMPORTANT!!
+#this path must end with an / for rsync to work correctly (but if you forgot there's a check anyway :-)
 #TODO If you have changed the backup path for gitlab adjust this variable accordingly(see https://docs.gitlab.com/omnibus/settings/backups.html#creating-an-application-backup)
 gl_back_loc="/srv/gitlab/data/backups/"
 #TODO Gitlab config mount point (defaults to /srv/gitlab/config only change if you're using a different mount point)
 gl_config="/srv/gitlab/config"
 #TODO  amount of DAYS to keep backup files eg 7
 maxDaysOfBackups="7"
-#OPTION If you choose to rsync the backup to an external storage (samba, webdav...) set the rsync location here
-#!!IMPORTANT!!
-#this path must end with an / for rsync to work correctly (but if you forgot there's a check anyway :-)
-rsync_loc="/path/to/mount/point/"
 #OPTION if you wish to backup your apache/nginx settings (eg reverse proxy) provide the location of the vhost
-webserver=""
+webserver="/path/to/webserver/vhost"
+#OPTION if you wish to backup your docker-compose.yml please provide the path to the file 
+docker="/path/to/docker-compose.yml"
 ###END OF VARIABLES###
 
 ############################################################
@@ -74,14 +79,29 @@ fi
 glpw=$(cat /home/gl)
 
 #
-#Just making sure the rsync location ends with a /
+#If rsync_loc is entererd:
+# -> copy his path to bac_loc so all backup files are in same directory
+#Perform check that path ends with a /
 #
+
+if [ -z "$rsync_loc" ]
+then
+#copy bac_loc to rsync_loc
+bac_loc=$rsync_loc
+#perform check
 rsync_check=$(echo $rsync_loc | rev | cut -c 1)
 if [ "$rsync_check" != "/" ]
 then
 rsync_loc=$(echo $rsync_loc/)
 fi
 
+
+fi
+
+
+
+##############
+exit 1
 
 #Get docker container id 
 containerid=$(docker ps | grep gitlab | awk '{ print $1}')
@@ -117,11 +137,11 @@ zip -r --password "$glpw" $gl_back_loc"$cfgbackup"  $gl_config >/dev/null
 # create dir for the date at remote location
 # first check if already exists
 #
-if [ -d "$rsync_loc$date" ]
+if [ -d "$bac_loc$date" ]
 then
 echo "Directory already exists" > /dev/null
 else
-mkdir "$rsync_loc""$date"
+mkdir "$bac_loc""$date"
 fi
 
 #
@@ -133,9 +153,27 @@ then
 echo "Nothing to do" > /dev/null
 else
 echo "ok"
-zip "$rsync_loc""$date"/"$date""_""$timestamp""_webserver.zip" $webserver
+tar -czf "$bac_loc""$date"/"$date""_""$timestamp""_webserver.tar.gz" $webserver
 
 fi
+
+
+#
+#OPTION -> if you wish to backup your webserver settings (eg reverse proxy) set up webserver path in variables
+#backup docker-compose-yml
+#
+if [ -z "$docker" ]
+then
+echo "Nothing to do" > /dev/null
+else
+echo "ok"
+tar -czf "$bac_loc""$date"/"$date""_""$timestamp""_docker-compose.tar.gz" $docker
+
+fi
+
+
+
+
 
 #
 # OPTION -> if you want to save your backups to remote location uncomment the following lines

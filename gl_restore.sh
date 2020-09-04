@@ -55,17 +55,18 @@ fi
 
 echo -e "THESE STEPS NEED TO BE EXECUTED TO RESTORE YOUR GITLAB INSTALLATION
 PLEASE READ CAREFULLY BEFORE PROCEEDING \n
-1-Stop your current docker container (docker stop <CONTAINER NUMBER> 
+1-Stop your current docker container ($ sudo docker stop <CONTAINER NUMBER> 
 2-Remove/rename your mount point directory (default:/srv/gitlab)
 3-Starting new container with the same WITH THE SAME GITLAB VERSION
-(hint: you can view the exact version in the file backup_infromation.yml located in DATE&TIMESTAMP_gitlab_backup.tar)
-4-Copy the following files under the backup folder (on your host, default location = /srv/gitlab/data/backup)
+(hint: you can view the exact version in the file backup_information.yml located in DATE&TIMESTAMP_gitlab_backup.tar)
+4-[OPTION]:Copy the following files under the backup folder (default location on host = /srv/gitlab/data/backup)
 Important: do not use subfolders! 
 The following files must be present:
 -DATE&TIMESTAMP_gitlab_backup.tar
 -DATE&TIMESTAMP_gitlab_config.zip
 Optionally:
--DATE&TIMESTAMP_webserver.zip"
+-DATE&TIMESTAMP_webserver.zip
+If you skip this skip the latest backup will be copied automatically"
 echo -n "Pres any key to continue" 
 read 
 
