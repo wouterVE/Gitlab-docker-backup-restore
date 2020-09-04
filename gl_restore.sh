@@ -27,7 +27,7 @@
 ###VARIABLES###
 #All lines starting with TODO have to be set before this script can run!
 
-#TODO If you have changed the backup path for gitlab adjust this variable accordingly(see https://docs.gitlab.com/omnibus/settings/backups.html#creating-an-application-backup)
+#OPTION If you have changed the backup path for gitlab adjust this variable accordingly(see https://docs.gitlab.com/omnibus/settings/backups.html#creating-an-application-backup)
 gl_back_loc="/srv/gitlab/data/backups"
 #OPTION: if you have chosen to rsync your backups please provide tha same path here
 rsync_loc="/path/to/mount/point"
@@ -75,7 +75,7 @@ read
 
 #backup files
 
-if ls $gl_back_loc/*_gitlab_backup*   1> /dev/null 2>&1; then
+if ls "$gl_back_loc"/*_gitlab_backup*   1> /dev/null 2>&1; then
 
 echo "Gitlab backup present"
 else
@@ -88,7 +88,7 @@ while true; do
     read -rp "Do you want to copy the latest file from backup location? (y/N)" yn
     case $yn in
         [Yy]* )
-backup_file=$(find  $rsync_loc -name "*_gitlab_backup*" | tail -n 1)
+backup_file=$(find  "$rsync_loc" -name "*_gitlab_backup*" | tail -n 1)
 if [ -z "$backup_file" ]
 then
 echo "Error file not found!"; exit 1
@@ -109,7 +109,7 @@ echo
 
 #config files
 
-if ls $gl_back_loc/*_gitlab_config* 1> /dev/null 2>&1; then
+if ls "$gl_back_loc"/*_gitlab_config* 1> /dev/null 2>&1; then
 
 echo "Gitlab config present"
 else
@@ -122,7 +122,7 @@ while true; do
     read -rp "Do you want to copy the latest file from backup location? (y/N)" yn
     case $yn in
         [Yy]* )
-config_file=$(find  $rsync_loc -name "*_gitlab_config*" | tail -n 1)
+config_file=$(find  "$rsync_loc" -name "*_gitlab_config*" | tail -n 1)
 if [ -z "$config_file" ]
 then
 echo "Error file not found!"; exit 1
@@ -150,7 +150,7 @@ echo
 #please comment section below if you don't want to restore webconfig 
 #Starting from
 #BEGIN COMMENTING
-if ls $gl_back_loc/*_webserver* 1> /dev/null 2>&1; then
+if ls "$gl_back_loc"/*_webserver* 1> /dev/null 2>&1; then
 
 echo "Gitlab webserver present"
 else
@@ -163,7 +163,7 @@ while true; do
     read -rp "Do you want to copy the latest file from backup location? (y/N)" yn
     case $yn in
         [Yy]* )
-webserver_file=$(find  $rsync_loc -name "*_webserver*" | tail -n 1)
+webserver_file=$(find  "$rsync_loc" -name "*_webserver*" | tail -n 1)
 if [ -z "$webserver_file" ]
 then
 echo "Error file not found!"; exit 1
@@ -200,7 +200,7 @@ echo
 echo
 echo "Restoring config - enter your password when asked for it..."
 
-backup_config=$(ls -t $gl_back_loc/*_gitlab_config* | tail -n 1)
+backup_config=$(ls -t "$gl_back_loc"/*_gitlab_config* | tail -n 1)
 unzip -o "$backup_config" -d /
 
 
@@ -211,7 +211,7 @@ unzip -o "$backup_config" -d /
 while true; do
     read -rp "Do you wish to restore the web configuration? (y/N)" yn
     case $yn in
-        [Yy]* ) echo "restoring web config...";webconfig=$(ls -t $gl_back_loc/*_webserver* | tail -n 1); unzip "$webconfig" -d /; break;;
+        [Yy]* ) echo "restoring web config...";webconfig=$(ls -t "$gl_back_loc"/*_webserver* | tail -n 1); unzip "$webconfig" -d /; break;;
         [Nn]* ) exit;;
         * ) echo "Please answer yes or no.";;
     esac
