@@ -13,8 +13,8 @@
 #*pages (Pages content)
 
 #tested & created on this environment:
-#ubuntu 18.04
-#docker 19.03.5
+#ubuntu 20.04
+#docker 19.03.8
 #Gitlab 12.6.4 CE
 
 #Created by wouterVE 2020
