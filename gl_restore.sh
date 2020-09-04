@@ -79,7 +79,7 @@ if ls "$gl_back_loc"/*_gitlab_backup*   1> /dev/null 2>&1; then
 
 echo "Gitlab backup present"
 else
-echo "Error Gitlab backup is NOT present!"
+echo "Gitlab backup is NOT present!"
 if [ -z "$rsync_loc" ]
 then
 echo "No rsync_loc - pleasy copy backup files manually!";exit 1
@@ -113,7 +113,7 @@ if ls "$gl_back_loc"/*_gitlab_config* 1> /dev/null 2>&1; then
 
 echo "Gitlab config present"
 else
-echo "Error Gitlab config is NOT present!"
+echo "Gitlab config is NOT present!"
 if [ -z "$rsync_loc" ]
 then
 echo "No rsync_loc - pleasy copy backup files manually!";exit 1
@@ -154,7 +154,7 @@ if ls "$gl_back_loc"/*_webserver* 1> /dev/null 2>&1; then
 
 echo "Gitlab webserver present"
 else
-echo "Error gitlab webserver config is not present!"
+echo "Gitlab webserver config is not present!"
 if [ -z "$rsync_loc" ]
 then
 echo "No rsync_loc - pleasy copy backup files manually!";exit 1
