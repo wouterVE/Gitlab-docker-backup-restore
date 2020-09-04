@@ -103,28 +103,21 @@ else
 echo "rsync does exist" > /dev/null
 
 #perform check for trailing /
-rsync_check=$(echo $rsync_loc | rev | cut -c 1)
+rsync_check=$(echo "$rsync_loc" | rev | cut -c 1)
 if [ "$rsync_check" != "/" ]
 then
-rsync_loc=$(echo $rsync_loc/)
+rsync_loc=$(echo "$rsync_loc/")
 #copy rsync_loc to bac_loc
-bac_loc=$rsync_loc
+bac_loc="$rsync_loc"
 fi
 
 
 fi
-
-echo "bac_loc: ", $bac_loc
-echo "rsync_loc:" $rsync_loc
-exit 1
-
-
-
 
 
 ##############
 
-#Get docker container id 
+#Get docker container id
 containerid=$(docker ps | grep gitlab | awk '{ print $1}')
 #Or alternatively you can use this (you'll need to change the tag if your not using the latest!
 #(source: https://stackoverflow.com/questions/54098866/how-to-obtain-container-id-base-on-docker-image-name-via-command-line?noredirect=1)
@@ -151,7 +144,7 @@ docker exec -t "$containerid" gitlab-backup create BACKUP="$date""_""$timestamp"
 # using the password generated and stored in /home/gl
 #
 
-zip -r --password "$glpw" $gl_back_loc"$cfgbackup"  $gl_config >/dev/null
+zip -r --password "$glpw" "$gl_back_loc""$cfgbackup"  "$gl_config" >/dev/null
 
 
 #
@@ -174,7 +167,7 @@ then
 echo "Nothing to do" > /dev/null
 else
 echo "ok"
-tar -czf "$bac_loc""$date"/"$date""_""$timestamp""_webserver.tar.gz" $webserver
+tar -czf "$bac_loc""$date"/"$date""_""$timestamp""_webserver.tar.gz" "$webserver"
 
 fi
 
@@ -188,7 +181,7 @@ then
 echo "Nothing to do" > /dev/null
 else
 echo "ok"
-tar -czf "$bac_loc""$date"/"$date""_""$timestamp""_docker-compose.tar.gz" $docker
+tar -czf "$bac_loc""$date"/"$date""_""$timestamp""_docker-compose.tar.gz" "$docker"
 
 fi
 
