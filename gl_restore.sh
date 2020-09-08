@@ -1,14 +1,5 @@
 #!/bin/bash
 
-#####
-#Bug#
-#####
-
-#line 162
-#Question "Do you want to copy the latest file from backup location? (y/N)"
-#Loop when answering "N"
-#Comment the section if you don't want to restore webserver config 
-
 
 #####################################################
 #script to restore your gitlab installation in docker
@@ -26,11 +17,15 @@
 
 ###VARIABLES###
 #All lines starting with TODO have to be set before this script can run!
+#Folder to restore (entered in command line)
+restore_folder=$1
+
+#TODO backup location
+# Enter the location for your backup files (either locally of external rsync location
+#bac_loc="/path/to/backup"
 
 #OPTION If you have changed the backup path for gitlab adjust this variable accordingly(see https://docs.gitlab.com/omnibus/settings/backups.html#creating-an-application-backup)
 gl_back_loc="/srv/gitlab/data/backups"
-#OPTION: if you have chosen to rsync your backups please provide tha same path here
-rsync_loc="/path/to/mount/point"
 ###END OF VARIABLES###
 
 #####################################################
@@ -58,130 +53,32 @@ PLEASE READ CAREFULLY BEFORE PROCEEDING \n
 1-Stop your current docker container ($ sudo docker stop <CONTAINER NUMBER> 
 2-Remove/rename your mount point directory (default:/srv/gitlab)
 3-Starting new container with the same WITH THE SAME GITLAB VERSION
-(hint: you can view the exact version in the file backup_information.yml located in DATE&TIMESTAMP_gitlab_backup.tar)
-4-[OPTION]:Copy the following files under the backup folder (default location on host = /srv/gitlab/data/backup)
-Important: do not use subfolders! 
-The following files must be present:
--DATE&TIMESTAMP_gitlab_backup.tar
--DATE&TIMESTAMP_gitlab_config.zip
-Optionally:
--DATE&TIMESTAMP_webserver.zip
-If you skip this skip the latest backup will be copied automatically"
-echo -n "Pres any key to continue" 
+(hint: you can view the exact version in the file backup_information.yml located in DATE&TIMESTAMP_gitlab_backup.tar)"
+echo -n "Press any key to continue" 
 read 
 
-#check if files are present
-#source: https://stackoverflow.com/questions/6363441/check-if-a-file-exists-with-wildcard-in-shell-script
+#COPY BACKUP FILES
 
-#backup files
-
-if ls "$gl_back_loc"/*_gitlab_backup*   1> /dev/null 2>&1; then
-
-echo "Gitlab backup present"
-else
-echo "Gitlab backup is NOT present!"
-if [ -z "$rsync_loc" ]
+if [ -z "$restore_folder"  ]
 then
-echo "No rsync_loc - pleasy copy backup files manually!";exit 1
+echo "Please enter backup folder to restore!"
+echo "exiting..."
+exit 1
 else
-while true; do
-    read -rp "Do you want to copy the latest file from backup location? (y/N)" yn
-    case $yn in
-        [Yy]* )
-backup_file=$(find  "$rsync_loc" -name "*_gitlab_backup*" | tail -n 1)
-if [ -z "$backup_file" ]
+
+if [ ! -d "$bac_loc"/"$restore_folder" ]
 then
-echo "Error file not found!"; exit 1
-else
-echo "Copying backup file..."
-cp "$backup_file" "$gl_back_loc" 
+echo "Restore folder does not exist!"
+exit 1
 fi
-#check
-break;;[Nn]* ) echo "OK please copy file manually";echo "exiting now..";exit 1;;
-        * ) echo "Please answer yes or no.";;
-    esac
-done
+echo "copying files to $gl_back_loc"
+cp -an "$bac_loc"/"$restore_folder"/. "$gl_back_loc"
 
 fi
 
-fi
-echo
 
-#config files
 
-if ls "$gl_back_loc"/*_gitlab_config* 1> /dev/null 2>&1; then
 
-echo "Gitlab config present"
-else
-echo "Gitlab config is NOT present!"
-if [ -z "$rsync_loc" ]
-then
-echo "No rsync_loc - pleasy copy backup files manually!";exit 1
-else
-while true; do
-    read -rp "Do you want to copy the latest file from backup location? (y/N)" yn
-    case $yn in
-        [Yy]* )
-config_file=$(find  "$rsync_loc" -name "*_gitlab_config*" | tail -n 1)
-if [ -z "$config_file" ]
-then
-echo "Error file not found!"; exit 1
-else
-echo "Copying backup file..."
-cp "$config_file" "$gl_back_loc"
-fi
-break;;[Nn]* ) echo "OK please copy file manually";echo "exiting now..";exit 1;;
-        * ) echo "Please answer yes or no.";;
-    esac
-done
-
-fi
-
-fi
-
-echo
-
-#webserver files
-######
-#BUG:#
-######
-#Answering no to "Do you want to copy the latest file from backup location? (y/N)"
-#results in loop
-#please comment section below if you don't want to restore webconfig 
-#Starting from
-#BEGIN COMMENTING
-if ls "$gl_back_loc"/*_webserver* 1> /dev/null 2>&1; then
-
-echo "Gitlab webserver present"
-else
-echo "Gitlab webserver config is not present!"
-if [ -z "$rsync_loc" ]
-then
-echo "No rsync_loc - pleasy copy backup files manually!";exit 1
-else
-while true; do
-    read -rp "Do you want to copy the latest file from backup location? (y/N)" yn
-    case $yn in
-        [Yy]* )
-webserver_file=$(find  "$rsync_loc" -name "*_webserver*" | tail -n 1)
-if [ -z "$webserver_file" ]
-then
-echo "Error file not found!"; exit 1
-else
-echo "Copying backup file..."
-cp "$webserver_file" "$gl_back_loc"
-fi
-
-break;;[Nn]* ) echo "OK skipping copy..";;
-        * ) echo "Please answer yes or no.";;
-    esac
-done
-
-fi
-
-fi
-
-###END COMMENTING
 
 
 echo
