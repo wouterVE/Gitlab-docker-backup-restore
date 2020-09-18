@@ -108,7 +108,7 @@ unzip -o "$backup_config" -d /
 while true; do
     read -rp "Do you wish to restore the web configuration? (y/N)" yn
     case $yn in
-        [Yy]* ) echo "restoring web config...";webconfig=$(ls -t "$gl_back_loc"/*_webserver* | tail -n 1); unzip "$webconfig" -d /; break;;
+        [Yy]* ) echo "restoring web config...";webconfig=$(ls -t "$gl_back_loc"/*_webserver* | tail -n 1); tar -xvzf "$webconfig" -d /; break;;
         [Nn]* ) exit;;
         * ) echo "Please answer yes or no.";;
     esac
